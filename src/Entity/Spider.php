@@ -54,6 +54,9 @@ class Spider
     #[ORM\OneToMany(targetEntity: Feedings::class, mappedBy: 'spider')]
     private Collection $feedings;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $locality = null;
+
 
     public function __construct()
     {
@@ -218,6 +221,18 @@ class Spider
                 $feeding->setSpider(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLocality(): ?string
+    {
+        return $this->locality;
+    }
+
+    public function setLocality(?string $locality): static
+    {
+        $this->locality = $locality;
 
         return $this;
     }
