@@ -57,6 +57,9 @@ class Spider
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $locality = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $sex = null;
+
 
     public function __construct()
     {
@@ -233,6 +236,18 @@ class Spider
     public function setLocality(?string $locality): static
     {
         $this->locality = $locality;
+
+        return $this;
+    }
+
+    public function getSex(): ?string
+    {
+        return $this->sex;
+    }
+
+    public function setSex(?string $sex): static
+    {
+        $this->sex = $sex;
 
         return $this;
     }
