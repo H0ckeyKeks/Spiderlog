@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
@@ -19,6 +19,10 @@
         {% endif %}
     </head>
     <body>
+        <header>
+            <img src="{{ asset('images/Spiderlog_Logo.png') }}" alt="Spiderlog Logo" height="80">
+            <h1>Spiderlog</h1>
+        </header>
         {% block body %}{% endblock %}
     </body>
 </html>
