@@ -3,5 +3,25 @@
 {% block title %}Spiderlog{% endblock %}
 
 {% block body %}
-    <p>Hier entsteht die Hauptseite des Spiderlog</p>
+    <div class="getInformation">
+        <form>
+            <select name="spider" onchange="this.form.submit()">
+               {% for spider in spiders %}
+                    <option value="{{ spider.id }}" {% if spider == selected %}selected{% endif %}>
+                       {{ spider.name }}
+                    </option>
+               {% endfor %}
+            </select>
+        </form>
+
+        <div class="actions">
+            <div class="actions-top">
+                <a href="#" class="action-button">Neue Art registrieren</a>
+                <a href="#" class="action-button">Neue Spinne registrieren</a>
+            </div>
+
+            <a href="#" class="action-button">Spinne archivieren</a>
+        </div>
+    </div>
+
 {% endblock %}
