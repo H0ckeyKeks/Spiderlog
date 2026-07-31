@@ -24,4 +24,39 @@
         </div>
     </div>
 
+    <div class="informationTable">
+        {%  if selected %}
+        <table>
+            <tr>
+                <td rowspan="2"><img class="spiderpic" src="/uploads/spiders/{{ selected.pictureLink }}"></td>
+                <th>Name</th>
+                <th>Art</th>
+                <th>Färbung</th>
+                <th>Stadium</th>
+                <th>Erworben am</th>
+                <th>letzte Fütterung</th>
+                <td rowspan="2">Ampellogo hier einfügen</td>
+            </tr>
+
+            <tr>
+                <td>{{ selected.name }}</td>
+                <td>{{ selected.species.latinName }} ({{ selected.species.commonName }})</td>
+                <td>{{ selected.coloration }}</td>
+                <td>{{ currentLifeStage.name }}</td>
+                <td>{{ selected.dateAquired|date('d.m.Y') }}</td>
+                <td>{% if lastFeedingDate %}
+                        {{ lastFeedingDate|date('d.m.Y') }}
+                    {% else %}
+                        noch nie
+                    {% endif %}
+                </td>
+            </tr>
+
+        </table>
+        {% else %}
+
+        {% endif %}
+
+    </div>
+
 {% endblock %}
