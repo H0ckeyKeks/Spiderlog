@@ -77,3 +77,41 @@ select:hover {
 .action-button:hover {
     background-color: var(--color-accent-hover);
 }
+
+.informationTable {
+    margin-top: 32px;
+}
+
+.spiderpic {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 4px 8px;
+    text-align: center;
+    border-bottom: 1px solid #E0D8C8;;
+}
+
+th {
+    background-color: var(--color-form-bg);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent-hover);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
