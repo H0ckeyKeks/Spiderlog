@@ -15,11 +15,8 @@
         </form>
 
         <div class="actions">
-            <div class="actions-top">
-                <a href="#" class="action-button">Neue Art registrieren</a>
-                <a href="#" class="action-button">Neue Spinne registrieren</a>
-            </div>
-
+            <a href="#" class="action-button">Neue Art registrieren</a>
+            <a href="#" class="action-button">Neue Spinne registrieren</a>
             <a href="#" class="action-button">Spinne archivieren</a>
         </div>
     </div>
@@ -35,7 +32,7 @@
                 <th>Stadium</th>
                 <th>Erworben am</th>
                 <th>letzte Fütterung</th>
-                <td rowspan="2">Ampellogo hier einfügen</td>
+                <th>Fütterung nötig?</th>
             </tr>
 
             <tr>
@@ -50,13 +47,84 @@
                         noch nie
                     {% endif %}
                 </td>
+                <td rowspan="2">Ampellogo hier einfügen</td>
             </tr>
 
         </table>
         {% else %}
 
         {% endif %}
-
     </div>
+
+    <div class="species_accordion">
+        <button class="accordion">Informationen zur Art</button>
+        <div class="panel">
+            <table>
+                <tr>
+                    <th>Lateinischer Name</th>
+                    <th>Allgemeiner Name</th>
+                    <th>Temperatur (min)</th>
+                    <th>Temperatur (max)</th>
+                    <th>Luftfeuchtigkeit (min)</th>
+                    <th>Luftfeuchtigkeit (max)</th>
+                </tr>
+
+                <tr>
+                    <td>{{ selected.species.latinName }}</td>
+                    <td>{{ selected.species.commonName }}</td>
+                    <td>{{ selected.species.tempMin }}</td>
+                    <td>{{ selected.species.tempMax }}</td>
+                    <td>{{ selected.species.humidityMin }}</td>
+                    <td>{{ selected.species.humidityMax }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="additional_tables">
+            <div class="feeding_table">
+                <table>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Futtertier</th>
+                        <th>Größe</th>
+                        <th>Anzahl</th>
+                    </tr>
+
+                    {% for feeding in selected.feedings %}
+                        <tr>
+                            <td>{{ feeding.date|date('d.m.Y') }}</td>
+                            <td>{{ feeding.food.foodSpecies.name }}</td>
+                            <td>{{ feeding.food.foodSize.size }}</td>
+                            <td>{{ feeding.quantity }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <a href="#" class="action-button">Fütterung hinzufügen</a>
+            </div>
+
+            <div class="molting_table">
+                <table>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Stadium</th>
+                        <th>Beinspannweite</th>
+                        <th>Notizen</th>
+                    </tr>
+
+                    {%  for molt in selected.molts %}
+                        <tr>
+                            <td>{{ molt.date|date('d.m.Y') }}</td>
+                            <td>{{ molt.lifeStage.name }}</td>
+                            <td>{{ molt.legSpanCm }}</td>
+                            <td>{{ molt.notes }}</td>
+                        </tr>
+                    {%  endfor %}
+                </table>
+                <a href="#" class="action-button">Häutung hinzufügen</a>
+            </div>
+        </div>
+    </div>
+
+    <a href="#" class="action-button archive-button">Archiv</a>
 
 {% endblock %}
