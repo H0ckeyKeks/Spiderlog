@@ -1,186 +1,55 @@
-* {
-    box-sizing: border-box;
-}
+@import "tailwindcss";
 
-:root {
-    --color-bg: #F7F3EA;
-    --color-form-bg: #E8DCC0;
-    --color-accent: #B08968;
-    --color-accent-hover: #9C7355;
-    --color-divider: black;
-}
+@theme {
+    /* Humus – primary background & text */
+    --color-humus-50: #f6f1e9;
+    --color-humus-100: #e9dfcd;
+    --color-humus-200: #d3c3a1;
+    --color-humus-300: #b39d72;
+    --color-humus-400: #8a7350;
+    --color-humus-500: #5f4c34;
+    --color-humus-600: #463726;
+    --color-humus-700: #332719;
+    --color-humus-800: #241d16;
+    --color-humus-900: #171310;
 
-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 16px;
-    background-color: var(--color-form-bg);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-}
+    /* Moss – healthy/ok status, primary actions */
+    --color-moss-50: #f1f3ea;
+    --color-moss-100: #dde3c8;
+    --color-moss-200: #c1cd9c;
+    --color-moss-300: #a2b46f;
+    --color-moss-400: #84994f;
+    --color-moss-500: #5c6b3f;
+    --color-moss-600: #485431;
+    --color-moss-700: #374024;
+    --color-moss-800: #272d19;
+    --color-moss-900: #1a1e11;
 
-img {
-    border-radius: 25px;
-}
+    /* Clay/terracotta – overdue status */
+    --color-clay-50: #fbf1ea;
+    --color-clay-100: #f6ddc9;
+    --color-clay-400: #cb7c50;
+    --color-clay-500: #b35d3a;
+    --color-clay-600: #95492c;
+    --color-clay-700: #763a23;
 
-body {
-    background-color: var(--color-bg);
-    padding: 12px;
-}
+    /* Sand – light surfaces/cards */
+    --color-sand-50: #faf7ee;
+    --color-sand-100: #f4eedb;
+    --color-sand-200: #efe6d3;
+    --color-sand-300: #e2d3b3;
 
-select {
-    padding: 8px 32px 8px 12px;
-    font-size: 14px;
-    appearance: none;
-    border: 1px solid var(--color-divider);
-    border-radius: 5px;
-    background-color: white;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B4F3B'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 10px 6px;
-}
+    /* Lichen – due-soon status */
+    --color-lichen-50: #faf3e2;
+    --color-lichen-100: #f3e2b8;
+    --color-lichen-400: #c9a13e;
+    --color-lichen-600: #a17e28;
 
-select:hover {
-    background-color: var(--color-accent);
-}
+    /* Fonts: --font-x becomes the class font-x */
+    --font-display: "Spectral", ui-serif, Georgia, serif;
+    --font-body: "Work Sans", ui-sans-serif, system-ui, sans-serif;
 
-.getInformation {
-    margin-top: 20px;
-    padding: 8px 12px;
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.actions {
-    display: flex;
-    gap: 12px;
-}
-
-.action-button {
-    padding: 8px 12px;
-    font-size: 14px;
-    display: inline-block;
-    gap: 12px;
-    background-color: var(--color-accent);
-    color: black;
-    text-decoration: none;
-    border-radius: 5px;
-    text-align: center;
-    transition: background-color 0.2s ease;
-}
-
-.action-button:hover {
-    background-color: var(--color-accent-hover);
-}
-
-.informationTable {
-    margin-top: 32px;
-}
-
-.spiderpic {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-th, td {
-    padding: 4px 8px;
-    text-align: center;
-    border-bottom: 1px solid #E0D8C8;
-}
-
-th {
-    background-color: var(--color-form-bg);
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-accent-hover);
-}
-
-tr:last-child td {
-    border-bottom: none;
-}
-
-.species_accordion {
-    margin-top: 32px;
-}
-
-.accordion {
-    background-color: var(--color-form-bg);
-    border: 1px solid var(--color-accent-hover);
-    color: var(--color-accent-hover);
-    cursor: pointer;
-    padding: 18px;
-    width: 100%;
-    text-align: left;
-    outline: none;
-    transition: 0.4s;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: bold;
-}
-
-.active, .accordion:hover {
-    background-color: var(--color-accent);
-    color: black;
-    font-size: 13px;
-}
-
-.accordion:after {
-    content: '\02795';
-    font-size: 13px;
-    float: right;
-    margin-left: 5px;
-}
-
-.active:after {
-    content: "\2796";
-}
-
-.panel {
-    margin-top: 12px;
-    background-color: white;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.2s ease-out;
-}
-
-.additional_tables {
-    margin-top: 32px;
-    margin-bottom: 32px;
-    display: flex;
-    gap: 24px;
-}
-
-.additional_tables .action-button {
-    margin-top: 16px;
-}
-
-.feeding_table,
-.molting_table {
-    flex: 1;
-}
-
-.archive-button {
-    display: block;
-    width: 100%;
-    font-size: 18px;
-    padding: 16px;
+    /* Custom shadows from the mockup: --shadow-x becomes the class shadow-x */
+    --shadow-soil: 0 14px 30px -14px rgb(23 19 16 / 0.5);
+    --shadow-lift: 0 6px 16px -6px rgb(23 19 16 / 0.28);
 }

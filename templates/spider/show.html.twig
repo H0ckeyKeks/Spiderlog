@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ spider.name }} – SpiderLog{% endblock %}
+
+{% block body %}
+    {% set status = status.value %}
+    {% set styles = {
+        overdue:  { pill: 'text-clay-700' },
+        due_soon: { pill: 'text-lichen-600' },
+        ok:       { pill: 'text-moss-700' },
+    } %}
+
+    <div class="relative h-52 bg-gradient-to-br from-humus-800 via-humus-700 to-moss-800 shrink-0 overflow-hidden">
+        {% if spider.pictureLink %}
+            <img src="{{ asset('uploads/spiders/' ~ spider.pictureLink) }}" alt="" class="absolute inset-0 w-full h-full object-cover">
+        {% endif %}
+        <div class="absolute inset-0 bg-gradient-to-t from-humus-900/90 via-humus-900/40 to-humus-900/10"></div>
+        <a href="{{ path('app_home') }}" class="absolute top-5 left-5 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center text-humus-800">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </a>
+        <div class="absolute bottom-4 left-5 right-5 text-sand-100">
+            <p class="text-xs uppercase tracking-[0.2em] text-lichen-100">{{ spider.species.latinName }}</p>
+            <h1 class="font-display text-3xl italic">{{ spider.name }}</h1>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-2 px-5 py-4 border-b border-humus-100">
+        <div class="text-center">
+            <p class="font-display text-lg text-humus-800">{{ legSpanCm ? legSpanCm ~ ' cm' : '–' }}</p>
+            <p class="text-[10px] text-humus-500 uppercase tracking-wide">Größe</p>
+        </div>
+        <div class="text-center border-x border-humus-100">
+            <p class="font-display text-lg text-humus-800">{{ lifeStage.name }}</p>
+            <p class="text-[10px] text-humus-500 uppercase tracking-wide">Stadium</p>
+        </div>
+        <div class="text-center">
+            <p class="font-display text-lg {{ styles[status].pill }}">
+                {% if status == 'overdue' %}
+                    seit {{ daysSinceReference }} Tag{{ daysSinceReference != 1 ? 'en' : '' }}
+                {% elseif status == 'due_soon' %}
+                    {{ daysUntilDue }} Tag{{ daysUntilDue != 1 ? 'en' : '' }}
+                {% else %}
+                    OK
+                {% endif %}
+            </p>
+            <p class="text-[10px] text-humus-500 uppercase tracking-wide">
+                {{ status == 'overdue' ? 'Überfällig' : 'Bis fällig' }}
+            </p>
+        </div>
+    </div>
+
+    <div class="flex gap-6 px-5 pt-3 text-sm">
+        <span class="pb-2 border-b-2 border-moss-500 text-humus-800 font-medium">Verlauf</span>
+        <span class="pb-2 text-humus-300">Infos</span>
+        <span class="pb-2 text-humus-300">Fotos</span>
+    </div>
+
+    <div class="px-5 py-4 space-y-4">
+        {% for event in events %}
+            <div class="flex gap-3">
+                <div class="flex flex-col items-center">
+                    <span class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 {{ event.type == 'molt' ? 'bg-lichen-100 text-lichen-600' : 'bg-moss-100 text-moss-600' }}">
+                        {% if event.type == 'molt' %}
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+                        {% else %}
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+                        {% endif %}
+                    </span>
+                    {% if not loop.last %}<span class="flex-1 w-px bg-humus-200 mt-1"></span>{% endif %}
+                </div>
+                <div class="pb-3">
+                    {% if event.type == 'molt' %}
+                        <p class="text-sm text-humus-800 font-medium">
+                            Häutung — {{ event.lifeStage.name }}{% if event.legSpanCm %} · {{ event.legSpanCm }} cm{% endif %}
+                        </p>
+                        {% if event.notes %}<p class="text-xs text-humus-500">{{ event.notes }}</p>{% endif %}
+                    {% else %}
+                        <p class="text-sm text-humus-800 font-medium">
+                            Fütterung — {{ event.food.foodSpecies.name }} ({{ event.food.foodSize.size }}){% if event.quantity > 1 %} · {{ event.quantity }}x{% endif %}
+                        </p>
+                    {% endif %}
+                    <p class="text-xs text-humus-500">
+                        {{ event.daysAgo == 0 ? 'Heute' : 'vor ' ~ event.daysAgo ~ ' Tag' ~ (event.daysAgo != 1 ? 'en' : '') }}
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center text-humus-400 text-sm py-6">Noch keine Einträge.</p>
+        {% endfor %}
+    </div>
+
+    <div class="px-5 pb-6 pt-2">
+        <a href="#" class="block text-center bg-gradient-to-r from-humus-800 to-humus-900 text-sand-100 rounded-full py-3 font-medium text-sm shadow-lift">
+            Eintrag hinzufügen
+        </a>
+    </div>
+{% endblock %}

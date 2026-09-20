@@ -1,130 +1,72 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Spiderlog{% endblock %}
+{% block title %}Übersicht – SpiderLog{% endblock %}
 
 {% block body %}
-    <div class="getInformation">
-        <form>
-            <select name="spider" onchange="this.form.submit()">
-               {% for spider in spiders %}
-                    <option value="{{ spider.id }}" {% if spider == selected %}selected{% endif %}>
-                       {{ spider.name }}
-                    </option>
-               {% endfor %}
-            </select>
-        </form>
+    {% set dueCount = entries|filter(e => e.status.value != 'ok')|length %}
 
-        <div class="actions">
-            <a href="#" class="action-button">Neue Art registrieren</a>
-            <a href="#" class="action-button">Neue Spinne registrieren</a>
-            <a href="#" class="action-button">Spinne archivieren</a>
+    <div class="relative bg-gradient-to-br from-humus-900 via-humus-800 to-moss-900 text-sand-100 px-5 pt-8 pb-6 overflow-hidden rounded-b-3xl">
+        <div class="absolute -top-10 -right-10 w-36 h-36 bg-moss-500/25 rounded-full blur-2xl"></div>
+        <div class="absolute -bottom-8 -left-6 w-28 h-28 bg-clay-500/15 rounded-full blur-2xl"></div>
+        <div class="relative">
+            <p class="text-xs uppercase tracking-[0.2em] text-lichen-100">Übersicht</p>
+            <h1 class="font-display text-2xl mt-1">{{ greeting }}</h1>
+            <p class="text-sand-300/90 text-sm mt-1">
+                {{ entries|length }} Spinne{{ entries|length != 1 ? 'n' : '' }}{% if dueCount > 0 %} · {{ dueCount }} Fütterung{{ dueCount != 1 ? 'en' : '' }} fällig{% endif %}
+            </p>
         </div>
     </div>
 
-    <div class="informationTable">
-        {%  if selected %}
-        <table>
-            <tr>
-                <td rowspan="2"><img class="spiderpic" src="/uploads/spiders/{{ selected.pictureLink }}"></td>
-                <th>Name</th>
-                <th>Art</th>
-                <th>Färbung</th>
-                <th>Stadium</th>
-                <th>Erworben am</th>
-                <th>letzte Fütterung</th>
-                <th>Fütterung nötig?</th>
-            </tr>
+    <div class="px-5 py-4 space-y-3">
+        {% for entry in entries %}
+            {% set spider = entry.spider %}
+            {% set status = entry.status.value %}
+            {% set styles = {
+                overdue:  { avatar: 'from-clay-400 to-clay-600',     pill: 'bg-clay-50 text-clay-700',     dot: 'bg-clay-500' },
+                due_soon: { avatar: 'from-lichen-400 to-lichen-600', pill: 'bg-lichen-50 text-lichen-600', dot: 'bg-lichen-400' },
+                ok:       { avatar: 'from-moss-400 to-moss-600',     pill: 'bg-moss-100 text-moss-700',    dot: 'bg-moss-500' },
+            } %}
+            {% set style = styles[status] %}
 
-            <tr>
-                <td>{{ selected.name }}</td>
-                <td>{{ selected.species.latinName }} ({{ selected.species.commonName }})</td>
-                <td>{{ selected.coloration }}</td>
-                <td>{{ currentLifeStage.name }}</td>
-                <td>{{ selected.dateAquired|date('d.m.Y') }}</td>
-                <td>{% if lastFeedingDate %}
-                        {{ lastFeedingDate|date('d.m.Y') }}
+            <a href="{{ path('app_spider_show', {name: spider.name}) }}" class="block bg-gradient-to-br from-white to-sand-50 rounded-3xl shadow-lift border border-humus-100/70 p-4 flex gap-3 items-center">
+                <div class="w-14 h-14 rounded-2xl shrink-0 bg-gradient-to-br {{ style.avatar }} flex items-center justify-center shadow-inner overflow-hidden">
+                    {% if spider.pictureLink %}
+                        <img src="{{ asset('uploads/spiders/' ~ spider.pictureLink) }}" alt="" class="w-full h-full object-cover"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <svg width="26" height="26" viewBox="0 0 96 96" class="text-sand-100/95 hidden" style="display:none">
+                            <path d="M48 30c-6 0-10 5-10 12v9c0 8 4.5 13 10 13s10-5 10-13v-9c0-7-4-12-10-12Z" fill="currentColor" fill-opacity=".95"/>
+                            <g stroke="currentColor" stroke-width="4.5" stroke-linecap="round" opacity=".85">
+                                <path d="M38 34 27 27"/><path d="M36 40 24 37"/><path d="M36 47 23 47"/><path d="M38 54 25 58"/>
+                                <path d="M58 34 69 27"/><path d="M60 40 72 37"/><path d="M60 47 73 47"/><path d="M58 54 71 58"/>
+                            </g>
+                        </svg>
                     {% else %}
-                        noch nie
+                        <svg width="26" height="26" viewBox="0 0 96 96" class="text-sand-100/95">
+                            <path d="M48 30c-6 0-10 5-10 12v9c0 8 4.5 13 10 13s10-5 10-13v-9c0-7-4-12-10-12Z" fill="currentColor" fill-opacity=".95"/>
+                            <g stroke="currentColor" stroke-width="4.5" stroke-linecap="round" opacity=".85">
+                                <path d="M38 34 27 27"/><path d="M36 40 24 37"/><path d="M36 47 23 47"/><path d="M38 54 25 58"/>
+                                <path d="M58 34 69 27"/><path d="M60 40 72 37"/><path d="M60 47 73 47"/><path d="M58 54 71 58"/>
+                            </g>
+                        </svg>
                     {% endif %}
-                </td>
-                <td rowspan="2">Ampellogo hier einfügen</td>
-            </tr>
-
-        </table>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-display text-lg text-humus-800 leading-tight">{{ spider.name }}</p>
+                    <p class="text-xs text-humus-500">{{ spider.species.commonName ?? spider.species.latinName }}</p>
+                    <span class="inline-flex items-center gap-1.5 mt-1.5 text-[11px] font-medium px-2 py-1 rounded-full {{ style.pill }}">
+                        <span class="w-1.5 h-1.5 rounded-full {{ style.dot }}"></span>
+                        {% if status == 'overdue' %}
+                            Überfällig · seit {{ entry.daysSinceReference }} Tag{{ entry.daysSinceReference != 1 ? 'en' : '' }}
+                        {% elseif status == 'due_soon' %}
+                            Fällig in {{ entry.daysUntilDue }} Tag{{ entry.daysUntilDue != 1 ? 'en' : '' }}
+                        {% else %}
+                            Zuletzt gefüttert{% if entry.lastFeedingDays is not null %} · vor {{ entry.lastFeedingDays }} Tag{{ entry.lastFeedingDays != 1 ? 'en' : '' }}{% endif %}
+                        {% endif %}
+                    </span>
+                </div>
+            </a>
         {% else %}
-
-        {% endif %}
+            <p class="text-center text-humus-400 text-sm py-10">Noch keine Spinnen angelegt.</p>
+        {% endfor %}
     </div>
-
-    <div class="species_accordion">
-        <button class="accordion">Informationen zur Art</button>
-        <div class="panel">
-            <table>
-                <tr>
-                    <th>Lateinischer Name</th>
-                    <th>Allgemeiner Name</th>
-                    <th>Temperatur (min)</th>
-                    <th>Temperatur (max)</th>
-                    <th>Luftfeuchtigkeit (min)</th>
-                    <th>Luftfeuchtigkeit (max)</th>
-                </tr>
-
-                <tr>
-                    <td>{{ selected.species.latinName }}</td>
-                    <td>{{ selected.species.commonName }}</td>
-                    <td>{{ selected.species.tempMin }}</td>
-                    <td>{{ selected.species.tempMax }}</td>
-                    <td>{{ selected.species.humidityMin }}</td>
-                    <td>{{ selected.species.humidityMax }}</td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="additional_tables">
-            <div class="feeding_table">
-                <table>
-                    <tr>
-                        <th>Datum</th>
-                        <th>Futtertier</th>
-                        <th>Größe</th>
-                        <th>Anzahl</th>
-                    </tr>
-
-                    {% for feeding in selected.feedings %}
-                        <tr>
-                            <td>{{ feeding.date|date('d.m.Y') }}</td>
-                            <td>{{ feeding.food.foodSpecies.name }}</td>
-                            <td>{{ feeding.food.foodSize.size }}</td>
-                            <td>{{ feeding.quantity }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-                <a href="#" class="action-button">Fütterung hinzufügen</a>
-            </div>
-
-            <div class="molting_table">
-                <table>
-                    <tr>
-                        <th>Datum</th>
-                        <th>Stadium</th>
-                        <th>Beinspannweite</th>
-                        <th>Notizen</th>
-                    </tr>
-
-                    {%  for molt in selected.molts %}
-                        <tr>
-                            <td>{{ molt.date|date('d.m.Y') }}</td>
-                            <td>{{ molt.lifeStage.name }}</td>
-                            <td>{{ molt.legSpanCm }}</td>
-                            <td>{{ molt.notes }}</td>
-                        </tr>
-                    {%  endfor %}
-                </table>
-                <a href="#" class="action-button">Häutung hinzufügen</a>
-            </div>
-        </div>
-    </div>
-
-    <a href="#" class="action-button archive-button">Archiv</a>
-
 {% endblock %}
